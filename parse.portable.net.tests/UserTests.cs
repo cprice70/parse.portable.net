@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using parse.portable.net.Models;
 using Parse.Api.Models;
 using Parse.Api.Tests;
 
@@ -11,7 +15,7 @@ namespace parse.portable.net.tests
     public class UserTests
     {
         private const string ValidUserId1 = "";
-
+        private const string FakeUuid = "0000000000000000";
         [Test]
         public async Task UserSignUp()
         {
@@ -31,7 +35,39 @@ namespace parse.portable.net.tests
 
             var result = await parseClient.LoginAsync("cprice70", "test4444", CancellationToken.None);
             
-            Assert.True(!string.IsNullOrWhiteSpace(result?.SessionToken));
+            Assert.True(!string.IsNullOrWhiteSpace(result.SessionToken));
+        }
+
+        [Test]
+        public async Task CreateObject()
+        {
+            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+            var obj = new {uuidForDevice = FakeUuid};
+           
+            var result = await parseClient.CreateObjectAsync<ParseObject>("UUID", obj, CancellationToken.None);
+
+            Assert.True(!string.IsNullOrWhiteSpace(result.ObjectId));
+        }
+
+        [Test]
+        public async Task QueryObjects()
+        {
+            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+            
+            var result = await parseClient.QueryObjectAsync<ParseObject>("UUID", null, CancellationToken.None);
+
+            Assert.True(result.Count > 0);
+        }
+
+        [Test]
+        public async Task QueryObjectsWithCondition()
+        {
+            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+            var query = JsonConvert.SerializeObject(new Dictionary<string,string>(){{"uuidForDevice",FakeUuid}});
+           
+            var result = await parseClient.QueryObjectAsync<ParseObject>("UUID", query, CancellationToken.None);
+
+            Assert.True(result.Count > 0);
         }
 
         #region helpers
