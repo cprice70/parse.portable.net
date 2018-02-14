@@ -8,6 +8,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using parse.portable.net.Models;
+using parse.portable.net.Rest.Models;
 using Parse.Api;
 using Parse.Api.Models;
 
@@ -94,7 +95,7 @@ namespace parse.portable.net
                    .WithHeader(ParseHeaders.AppId, AddId)
                    .WithHeader("X-Parse-Revocable-Session", 1)
                    .WithHeader("Content-Type", "application/json")
-                   .GetJsonAsync<ParseUser>(cancellationToken: cancellationToken);
+                   .GetJsonAsync<ParseUser>(cancellationToken);
                    
 
                return getResp;
@@ -105,6 +106,36 @@ namespace parse.portable.net
                return null;
            }
        }
+
+
+        //{
+        //    "anonymous": {
+        //        "id": "random UUID with lowercase hexadecimal digits"
+        //    }
+        //}
+        public async Task<ParseUser> LoginAnonymousAsync(
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var authData = new AuthData { Anonymous = new AnonAuthData {Id = Guid.NewGuid().ToString()}};
+                var json = JsonConvert.SerializeObject(authData);
+                var loginUrl = BaseUrl + ParseUrls.User;
+                var getResp = await loginUrl
+                    .WithHeader(ParseHeaders.AppId, AddId)
+                    .WithHeader("X-Parse-Revocable-Session", 1)
+                    .WithHeader("Content-Type", "application/json")
+                    .PostUrlEncodedAsync(authData, cancellationToken)
+                    .ReceiveJson<ParseUser>();
+
+                return getResp;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
 
         public async Task<bool> ResetPasswordAsync(string emailaddress, CancellationToken token)
         {
@@ -130,6 +161,28 @@ namespace parse.portable.net
         }
 
         /// <summary>
+        /// Updates a pre-existing ParseUser
+        /// </summary>
+        /// <param name="user">The user to delete</param>
+        /// <param name="sessionToken">Session token given by SignUp or LogIn</param>
+        /// <param name="token"></param>
+        public async Task<bool> DeleteUser<T>(T user, string sessionToken, CancellationToken token) where T : ParseUser, new()
+        {
+            if (user == null || string.IsNullOrEmpty(user.ObjectId) || string.IsNullOrEmpty(sessionToken)) throw new ArgumentException("ObjectId and SessionToken are required.");
+
+            var resource = string.Format(ParseUrls.UserObject, user.ObjectId);
+            var url = BaseUrl + resource;
+            var resp = await url
+                .WithHeader(ParseHeaders.AppId, AddId)
+                .WithHeader("X-Parse-Revocable-Session", 1)
+                .WithHeader("Content-Type", "application/json")
+                .WithHeader(ParseHeaders.SessionToken, sessionToken)
+                .DeleteAsync(token);
+
+            return resp.IsSuccessStatusCode;
+        }
+
+        /// <summary>
         /// Creates a new ParseObject
         /// </summary>
         /// <param name="obj">The object to be created on the server</param>
@@ -138,15 +191,9 @@ namespace parse.portable.net
         /// <returns>A fully populated ParseObject, including ObjectId</returns>
         public async Task<T> CreateObjectAsync<T>(string className, object obj, CancellationToken token) where T : ParseObject, new()
         {
-            if (string.IsNullOrWhiteSpace(className))
-            {
-                throw new ArgumentNullException("class_name");
-            }
+            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException("class_name");
 
-            if (obj == null)
-            {
-                throw new ArgumentNullException("obj");
-            }
+            if (obj == null) throw new ArgumentNullException("obj");
 
             try
             {
@@ -155,7 +202,7 @@ namespace parse.portable.net
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
-                    .PostJsonAsync(obj, cancellationToken: token)
+                    .PostJsonAsync(obj, token)
                     .ReceiveJson<T>();
 
                 if (getResp == null) return null;
@@ -171,10 +218,7 @@ namespace parse.portable.net
 
         public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, CancellationToken token) where T : ParseObject, new()        
         {
-            if (string.IsNullOrWhiteSpace(className))
-            {
-                throw new ArgumentNullException("class_name");
-            }
+            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException("class_name");
 
             try
             {
@@ -197,19 +241,6 @@ namespace parse.portable.net
                 Console.WriteLine(e);
                 return null;
             }
-        }
-
-        public Task<bool> SaveAsync()
-        {
-            return Task.FromResult(false);
-
-
-            //url -X POST \
-            //-H "X-Parse-Application-Id: ${APPLICATION_ID}" \
-            //-H "X-Parse-REST-API-Key: ${REST_API_KEY}" \
-            //-H "Content-Type: application/json" \
-            //-d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
-            //https://YOUR.PARSE-SERVER.HERE/parse/classes/GameScore
         }
 
         internal class ParseResponse

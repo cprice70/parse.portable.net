@@ -39,6 +39,16 @@ namespace parse.portable.net.tests
         }
 
         [Test]
+        public async Task LoginAnonymousAsync()
+        {
+            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+
+            var result = await parseClient.LoginAnonymousAsync(CancellationToken.None);
+            
+            Assert.True(!string.IsNullOrWhiteSpace(result.SessionToken));
+        }
+
+        [Test]
         public async Task CreateObject()
         {
             var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using parse.portable.net.Models;
 using Parse.Api.Attributes;
 
-namespace Parse.Api.Models
+namespace parse.portable.net.Rest.Models
 {
     /// <inheritdoc />
     /// <summary>
@@ -35,8 +35,7 @@ namespace Parse.Api.Models
 
     public class AuthData
     {
-        public FacebookAuthData Facebook { get; set; }
-        public TwitterAuthData Twitter { get; set; }
+        [JsonProperty("anonymous")]
         public AnonAuthData Anonymous { get; set; }
     }
 

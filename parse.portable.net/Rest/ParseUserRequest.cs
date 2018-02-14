@@ -1,38 +1,29 @@
-﻿//{
-//  "username": "cooldude6",
-//  "phone": "415-392-0202",
-//  "createdAt": "2011-11-07T20:58:34.448Z",
-//  "updatedAt": "2011-11-07T20:58:34.448Z",
-//  "objectId": "g7y9tkhB7O",
-//  "sessionToken": "r:pnktnjyb996sj4p156gjtp4im"
-//}
-
+﻿
 namespace parse.portable.net.Rest
 {
+    /// <inheritdoc />
     /// <summary>The information for a single iOS device</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.22.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class ParseUserRequest : System.ComponentModel.INotifyPropertyChanged
+    public class ParseUserRequest : System.ComponentModel.INotifyPropertyChanged
     {
-        private string username;
-        private string phone;
-        private string createdAt;
-        private string updatedAt;
-        private string objectId;
-        private string sessionToken;
+        private string _username;
+        private string _phone;
+        private string _createdAt;
+        private string _updatedAt;
+        private string _objectId;
+        private string _sessionToken;
 
         /// <summary>The Unique Device IDentifier of the device</summary>
         [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public string Username
         {
-            get { return username; }
+            get => _username;
             set
             {
-                if (username != value)
-                {
-                    username = value;
-                    RaisePropertyChanged();
-                }
+                if (_username == value) return;
+                _username = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -41,14 +32,12 @@ namespace parse.portable.net.Rest
         [System.ComponentModel.DataAnnotations.Required]
         public string Phone
         {
-            get { return phone; }
+            get => _phone;
             set
             {
-                if (phone != value)
-                {
-                    phone = value;
-                    RaisePropertyChanged();
-                }
+                if (_phone == value) return;
+                _phone = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -56,14 +45,12 @@ namespace parse.portable.net.Rest
         [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string CreatedAt
         {
-            get { return createdAt; }
+            get => _createdAt;
             set
             {
-                if (createdAt != value)
-                {
-                    createdAt = value;
-                    RaisePropertyChanged();
-                }
+                if (_createdAt == value) return;
+                _createdAt = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -71,14 +58,12 @@ namespace parse.portable.net.Rest
         [Newtonsoft.Json.JsonProperty("updatedAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string UpdatedAt
         {
-            get { return updatedAt; }
+            get => _updatedAt;
             set
             {
-                if (updatedAt != value)
-                {
-                    updatedAt = value;
-                    RaisePropertyChanged();
-                }
+                if (_updatedAt == value) return;
+                _updatedAt = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -86,14 +71,12 @@ namespace parse.portable.net.Rest
         [Newtonsoft.Json.JsonProperty("objectId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ObjectId
         {
-            get { return objectId; }
+            get => _objectId;
             set
             {
-                if (objectId != value)
-                {
-                    objectId = value;
-                    RaisePropertyChanged();
-                }
+                if (_objectId == value) return;
+                _objectId = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -101,14 +84,12 @@ namespace parse.portable.net.Rest
         [Newtonsoft.Json.JsonProperty("sessionToken", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string SessionToken
         {
-            get { return sessionToken; }
+            get => _sessionToken;
             set
             {
-                if (sessionToken != value)
-                {
-                    sessionToken = value;
-                    RaisePropertyChanged();
-                }
+                if (_sessionToken == value) return;
+                _sessionToken = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -127,8 +108,7 @@ namespace parse.portable.net.Rest
         protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            handler?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
     }
 }

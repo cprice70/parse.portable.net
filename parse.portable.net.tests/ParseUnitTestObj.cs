@@ -1,5 +1,6 @@
 ﻿using System;
 using parse.portable.net.Models;
+using parse.portable.net.Rest.Models;
 using Parse.Api.Models;
 
 namespace Parse.Api.Tests

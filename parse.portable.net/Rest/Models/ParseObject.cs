@@ -1,4 +1,5 @@
 ﻿using System;
+using parse.portable.net.Rest.Models;
 using Parse.Api.Attributes;
 using Parse.Api.Models;
 
