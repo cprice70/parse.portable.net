@@ -1,7 +1,7 @@
 ﻿using System;
+using Newtonsoft.Json;
 using parse.portable.net.Rest.Models;
 using Parse.Api.Attributes;
-using Parse.Api.Models;
 
 namespace parse.portable.net.Models
 {
@@ -10,14 +10,25 @@ namespace parse.portable.net.Models
     /// </summary>
     public class ParseObject
     {
-        [JsonIgnoreForSerialization]
+        [JsonProperty("createdAt")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonIgnoreForSerialization]
-        public DateTime UpdatedAt { get; set; }
+        [JsonProperty("updatedAt")]
+        public DateTime UpdatedAt { get; set;  }
 
-        [JsonIgnoreForSerialization]
+        [JsonIgnore]
         public string ObjectId { get; set; }
+
+        public bool ShouldSerializeCreatedAt()
+        {
+            // never serialize CreatedAt
+            return false;
+        }
+
+        public bool ShouldSerializeUpdatedAt()
+        {
+            return false;
+        }
 
         internal static string GetClassName(Type type)
         {
@@ -25,5 +36,7 @@ namespace parse.portable.net.Models
         }
 
         internal const string TypeProperty = "__type";
+
+        public virtual string ClassName { get; }
     }
 }

@@ -191,9 +191,9 @@ namespace parse.portable.net
         /// <returns>A fully populated ParseObject, including ObjectId</returns>
         public async Task<T> CreateObjectAsync<T>(string className, object obj, CancellationToken token) where T : ParseObject, new()
         {
-            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException("class_name");
+            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException(nameof(className));
 
-            if (obj == null) throw new ArgumentNullException("obj");
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             try
             {
@@ -233,8 +233,8 @@ namespace parse.portable.net
                     .WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveString();
-                var mDeserializeObject =  JsonConvert.DeserializeObject<Results>(getResp);
-                return (IList<T>) mDeserializeObject.results;
+                var mDeserializeObject =  JsonConvert.DeserializeObject<Results<T>>(getResp);
+                return mDeserializeObject.results;
             }
             catch (Exception e)
             {
@@ -249,9 +249,9 @@ namespace parse.portable.net
             public HttpStatusCode StatusCode { get; set; }
         }
 
-        internal class Results
+        internal class Results<T>
         {
-            public List<ParseObject> results { get; set; }
+            public List<T> results { get; set; }
         }
     }
 }

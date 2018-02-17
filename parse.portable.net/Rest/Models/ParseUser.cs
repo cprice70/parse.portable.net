@@ -31,6 +31,8 @@ namespace parse.portable.net.Rest.Models
 
         [JsonIgnoreForSerialization]   
         public AuthData AuthData { get; set; }
+        public override string ClassName => string.Empty;
+
     }
 
     public class AuthData
