@@ -241,7 +241,7 @@ namespace parse.portable.net
 
         public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, CancellationToken token) where T : ParseObject, new()        
         {
-            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException("class_name");
+            if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException(nameof(className));
 
             try
             {

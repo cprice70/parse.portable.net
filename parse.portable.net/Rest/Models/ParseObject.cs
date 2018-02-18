@@ -1,7 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
 using parse.portable.net.Rest.Models;
-using Parse.Api.Attributes;
 
 namespace parse.portable.net.Models
 {
@@ -16,7 +15,7 @@ namespace parse.portable.net.Models
         [JsonProperty("updatedAt")]
         public DateTime UpdatedAt { get; set;  }
 
-        [JsonIgnore]
+        [JsonProperty("objectId")]
         public string ObjectId { get; set; }
 
         public bool ShouldSerializeCreatedAt()
