@@ -44,6 +44,9 @@
         // POST to call cloud function
         public const string Function = "functions/{0}";
 
+        // Get to validate token
+        public const string Validate = "/users/me";
+
     }
 
     internal static class ParseHeaders

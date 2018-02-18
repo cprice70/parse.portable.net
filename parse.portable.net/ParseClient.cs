@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using parse.portable.net.Models;
 using parse.portable.net.Rest.Models;
 using Parse.Api;
-using Parse.Api.Models;
 
 namespace parse.portable.net
 {
@@ -82,50 +81,52 @@ namespace parse.portable.net
 
         public async Task<ParseUser> LoginAsync(string pUsername, string pPassword,
             CancellationToken cancellationToken)
-       {
-           try
-           {
-               var loginUrl = BaseUrl + ParseUrls.Login;
-               var getResp = await loginUrl
-                   .SetQueryParams(new
-                   {
-                       username = pUsername,
-                       password = pPassword
-                   })
-                   .WithHeader(ParseHeaders.AppId, AddId)
-                   .WithHeader("X-Parse-Revocable-Session", 1)
-                   .WithHeader("Content-Type", "application/json")
-                   .GetJsonAsync<ParseUser>(cancellationToken);
-                   
-
-               return getResp;
-           }
-           catch (Exception e)
-           {
-               Console.WriteLine(e);
-               return null;
-           }
-       }
+        {
+            try
+            {
+                var loginUrl = BaseUrl + ParseUrls.Login;
+                var getResp = await loginUrl
+                    .SetQueryParams(new
+                    {
+                        username = pUsername,
+                        password = pPassword
+                    })
+                    .WithHeader(ParseHeaders.AppId, AddId)
+                    .WithHeader("X-Parse-Revocable-Session", 1)
+                    .WithHeader("Content-Type", "application/json")
+                    .GetJsonAsync<ParseUser>(cancellationToken);
 
 
-        //{
-        //    "anonymous": {
-        //        "id": "random UUID with lowercase hexadecimal digits"
-        //    }
-        //}
+                return getResp;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public async Task<ParseUser> LoginAnonymousAsync(
             CancellationToken cancellationToken)
         {
             try
             {
-                var authData = new AuthData { Anonymous = new AnonAuthData {Id = Guid.NewGuid().ToString()}};
-                var json = JsonConvert.SerializeObject(authData);
+
+                var parseAuth = new ParseAnonymousUtils.ParseAnonClass
+                {
+                    AuthData = new ParseAnonymousUtils.AuthData()
+                };
+                parseAuth.AuthData.Anonymous = new ParseAnonymousUtils.Anonymous
+                {
+                    Id = Guid.NewGuid().ToString()
+                };
+                var authJson = JsonConvert.SerializeObject(parseAuth);
                 var loginUrl = BaseUrl + ParseUrls.User;
                 var getResp = await loginUrl
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
-                    .PostUrlEncodedAsync(authData, cancellationToken)
+                    .PostJsonAsync(parseAuth, cancellationToken)
                     .ReceiveJson<ParseUser>();
 
                 return getResp;
@@ -134,6 +135,28 @@ namespace parse.portable.net
             {
                 Console.WriteLine(e);
                 return null;
+            }
+        }
+
+        public async Task<bool> ValidateTokenAsync(string authToken, CancellationToken token)
+        {
+            try
+            {
+                var validateUrl = BaseUrl + ParseUrls.Validate;
+                var getResp = await validateUrl
+                    .WithHeader("X-Parse-Session-Token", authToken)
+                    .WithHeader(ParseHeaders.AppId, AddId)
+                    .WithHeader("X-Parse-Revocable-Session", 1)
+                    .WithHeader("Content-Type", "application/json")
+                    .GetAsync(token)
+                    .ReceiveJson<ParseResponse>();
+
+                    return !((int)getResp.StatusCode == 209);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
             }
         }
 
