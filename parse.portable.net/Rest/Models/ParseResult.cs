@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using Newtonsoft.Json;
-using parse.portable.net.Models;
-using parse.portable.net.Rest.Models;
 
-namespace Parse.Api.Models
+namespace parse.portable.net.Rest.Models
 {
     /// <summary>
     /// Base class for result from Parse API request.

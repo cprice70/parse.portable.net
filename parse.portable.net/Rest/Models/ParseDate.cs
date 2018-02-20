@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace parse.portable.net.Rest.Models
 {
-    public partial class Date
+    public class Date
     {
         [JsonProperty("__type")]
         public string Type  => "Date";
@@ -11,5 +11,4 @@ namespace parse.portable.net.Rest.Models
         [JsonProperty("iso")]
         public DateTime Iso { get; set; }
     }
-
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
-using parse.portable.net.Rest.Models;
 
-namespace parse.portable.net.Models
+namespace parse.portable.net.Rest.Models
 {
     /// <summary>
     /// Base class for all objects in Parse

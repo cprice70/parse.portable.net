@@ -3,7 +3,7 @@
 namespace ParseCommon.Rest
 {
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.22.0 (Newtonsoft.Json v9.0.0.0)")]
-    public class ErrorResponse : System.ComponentModel.INotifyPropertyChanged
+    public sealed class ErrorResponse : System.ComponentModel.INotifyPropertyChanged
     {
         private ErrorDetails _error;
     
@@ -30,8 +30,8 @@ namespace ParseCommon.Rest
         }
     
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+
+        private void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));

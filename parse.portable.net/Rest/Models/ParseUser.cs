@@ -1,6 +1,5 @@
 ﻿using System;
 using Newtonsoft.Json;
-using parse.portable.net.Models;
 using Parse.Api.Attributes;
 
 namespace parse.portable.net.Rest.Models

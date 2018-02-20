@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace parse.portable.net.Models
+namespace parse.portable.net.Rest.Models
 {
     /// <summary>
     /// An exception from the Parse API.

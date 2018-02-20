@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
-using parse.portable.net.Models;
 using parse.portable.net.Rest.Models;
 using Parse.Api;
 
@@ -35,21 +34,21 @@ namespace parse.portable.net
             });
         }
 
-        protected virtual void UpdateJsonSerializerSettings(ParseClient instance,
+        private void UpdateJsonSerializerSettings(ParseClient instance,
             JsonSerializerSettings settings)
         {
         }
 
-        protected virtual void PrepareRequest(HttpClient client, HttpRequestMessage request, string url)
+        private void PrepareRequest(HttpClient client, HttpRequestMessage request, string url)
         {
         }
 
-        protected virtual void PrepareRequest(HttpClient client, HttpRequestMessage request,
+        private void PrepareRequest(HttpClient client, HttpRequestMessage request,
             System.Text.StringBuilder urlBuilder)
         {
         }
 
-        protected virtual void ProcessResponse(HttpClient client, HttpResponseMessage response)
+        private void ProcessResponse(HttpClient client, HttpResponseMessage response)
         {
         }
 
@@ -111,7 +110,6 @@ namespace parse.portable.net
         {
             try
             {
-
                 var parseAuth = new ParseAnonymousUtils.ParseAnonClass
                 {
                     AuthData = new ParseAnonymousUtils.AuthData()
@@ -151,7 +149,7 @@ namespace parse.portable.net
                     .GetAsync(token)
                     .ReceiveJson<ParseResponse>();
 
-                    return !((int)getResp.StatusCode == 209);
+                    return (int)getResp.StatusCode != 209;
             }
             catch (Exception e)
             {
@@ -266,13 +264,13 @@ namespace parse.portable.net
             }
         }
 
-        internal class ParseResponse
+        private abstract class ParseResponse
         {
             public string Content { get; set; }
             public HttpStatusCode StatusCode { get; set; }
         }
 
-        internal class Results<T>
+        private abstract class Results<T>
         {
             public List<T> results { get; set; }
         }

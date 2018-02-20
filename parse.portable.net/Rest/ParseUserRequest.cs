@@ -4,7 +4,7 @@ namespace parse.portable.net.Rest
     /// <inheritdoc />
     /// <summary>The information for a single iOS device</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.22.0 (Newtonsoft.Json v9.0.0.0)")]
-    public class ParseUserRequest : System.ComponentModel.INotifyPropertyChanged
+    public sealed class ParseUserRequest : System.ComponentModel.INotifyPropertyChanged
     {
         private string _username;
         private string _phone;
@@ -98,14 +98,11 @@ namespace parse.portable.net.Rest
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
 
-        public static ParseUserRequest FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ParseUserRequest>(data);
-        }
+        public static ParseUserRequest FromJson(string data) => Newtonsoft.Json.JsonConvert.DeserializeObject<ParseUserRequest>(data);
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        private void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));

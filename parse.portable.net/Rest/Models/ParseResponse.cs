@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace parse.portable.net.Models
+namespace parse.portable.net.Rest.Models
 {
     public class ParseResponse
     {

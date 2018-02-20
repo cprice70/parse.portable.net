@@ -8,27 +8,25 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace parse.portable.net
 {
     public static class ParseAnonymousUtils
     {
-        public partial class ParseAnonClass
+        public class ParseAnonClass
         {
             [JsonProperty("authData")]
             public AuthData AuthData { get; set; }
         }
 
-        public partial class AuthData
+        public class AuthData
         {
             [JsonProperty("anonymous")]
             public Anonymous Anonymous { get; set; }
         }
 
-        public partial class Anonymous
+        public class Anonymous
         {
             [JsonProperty("id")]
             public string Id { get; set; }
