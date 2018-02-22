@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using parse.portable.net.Models;
+using parse.portable.net.Rest.Models;
 using Parse.Api.Models;
 using Parse.Api.Tests;
 
