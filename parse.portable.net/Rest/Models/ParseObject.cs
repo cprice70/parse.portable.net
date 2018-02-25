@@ -35,6 +35,7 @@ namespace parse.portable.net.Rest.Models
 
         internal const string TypeProperty = "__type";
 
+        [JsonIgnore]
         public virtual string ClassName { get; }
     }
 }
