@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -264,15 +265,57 @@ namespace parse.portable.net
             }
         }
 
-        private abstract class ParseResponse
+        //public Task<T> CallFunctionAsync<T>(String name,
+        //    IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        //{
+        //    if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
+        //    if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+
+        //    try
+        //    {
+        //        var functionUrl = BaseUrl + string.Format(ParseUrls.Function, name);
+        //        var getResp = await functionUrl
+        //            .WithHeader(ParseHeaders.AppId, AddId)
+        //            .WithHeader("X-Parse-Revocable-Session", 1)
+        //            .WithHeader("Content-Type", "application/json")
+        //            .PostJsonAsync(obj, token)
+        //            .ReceiveJson<T>();
+
+        //        if (getResp == null) return null;
+        //        getResp.UpdatedAt = getResp.CreatedAt;
+        //        return getResp;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        return null;
+        //    }
+
+        //    //          curl - X POST \
+        //    //-H "X-Parse-Application-Id: 98743578e202eb43740849091ff8d0ea" \
+        //    //-H "X-Parse-REST-API-Key: ${REST_API_KEY}" \
+        //    //-H "Content-Type: application/json" \
+        //    //-d '{}' \
+        //    //https://YOUR.PARSE-SERVER.HERE/parse/functions/hello
+
+
+        //    //return CloudCodeController.CallFunctionAsync<T>(name,
+        //    //parameters,
+        //    //ParseUser.CurrentSessionToken,
+        //    //cancellationToken);
+        //}
+
+        private class ParseResponse
         {
             public string Content { get; set; }
             public HttpStatusCode StatusCode { get; set; }
         }
 
-        private abstract class Results<T>
+        private class Results<T>
         {
-            public List<T> results { get; set; }
+            [JsonProperty("results")]
+            public T[] results { get; set; }
         }
     }
 }
