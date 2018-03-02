@@ -265,46 +265,41 @@ namespace parse.portable.net
             }
         }
 
-        //public Task<T> CallFunctionAsync<T>(String name,
-        //    IDictionary<string, object> parameters, CancellationToken cancellationToken)
-        //{
-        //    if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        public async Task<T> CallFunctionAsync<T>(String name,
+            IDictionary<string, object> parameters, CancellationToken token)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-        //    if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            var json_params = JsonConvert.SerializeObject(parameters);
+            try
+            {
+                var functionUrl = BaseUrl + string.Format(ParseUrls.Jobs, name);
+                var getResp = await functionUrl
+                    .WithHeader(ParseHeaders.AppId, AddId)
+                    .WithHeader("X-Parse-Revocable-Session", 1)
+                    .WithHeader("Content-Type", "application/json")
+                    .PostJsonAsync(json_params, token)
+                    .ReceiveJson<T>();
 
-        //    try
-        //    {
-        //        var functionUrl = BaseUrl + string.Format(ParseUrls.Function, name);
-        //        var getResp = await functionUrl
-        //            .WithHeader(ParseHeaders.AppId, AddId)
-        //            .WithHeader("X-Parse-Revocable-Session", 1)
-        //            .WithHeader("Content-Type", "application/json")
-        //            .PostJsonAsync(obj, token)
-        //            .ReceiveJson<T>();
+                if (getResp == null) return default(T);
+               
+                return getResp;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return default(T);
+            }
 
-        //        if (getResp == null) return null;
-        //        getResp.UpdatedAt = getResp.CreatedAt;
-        //        return getResp;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        return null;
-        //    }
+  //          curl - X POST \
+  //-H "X-Parse-Application-Id: 98743578e202eb43740849091ff8d0ea" \
+  //-H "X-Parse-Master-Key: ${MASTER_KEY}" \
+  //-H "Content-Type: application/json" \
+  //-d '{"plan":"paid"}' \
+  //https://YOUR.PARSE-SERVER.HERE/parse/jobs/userMigration
 
-        //    //          curl - X POST \
-        //    //-H "X-Parse-Application-Id: 98743578e202eb43740849091ff8d0ea" \
-        //    //-H "X-Parse-REST-API-Key: ${REST_API_KEY}" \
-        //    //-H "Content-Type: application/json" \
-        //    //-d '{}' \
-        //    //https://YOUR.PARSE-SERVER.HERE/parse/functions/hello
-
-
-        //    //return CloudCodeController.CallFunctionAsync<T>(name,
-        //    //parameters,
-        //    //ParseUser.CurrentSessionToken,
-        //    //cancellationToken);
-        //}
+        }
 
         private class ParseResponse
         {

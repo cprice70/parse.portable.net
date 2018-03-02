@@ -44,6 +44,9 @@
         // POST to call cloud function
         public const string Function = "functions/{0}";
 
+        //POST to Backgroud Job
+        public const string Jobs = "jobs/{0}";
+
         // Get to validate token
         public const string Validate = "/users/me";
 
