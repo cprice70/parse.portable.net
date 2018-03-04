@@ -221,3 +221,5 @@ _Pvt_Extensions
 \.idea/\.idea\.parse\.portable\.net/\.idea/
 
 \.idea/\.idea\.parse\.portable\.net/
+
+parse\.portable\.net\.tests\.old/

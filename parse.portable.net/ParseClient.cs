@@ -95,8 +95,7 @@ namespace parse.portable.net
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
                     .GetJsonAsync<ParseUser>(cancellationToken);
-
-
+                
                 return getResp;
             }
             catch (Exception e)

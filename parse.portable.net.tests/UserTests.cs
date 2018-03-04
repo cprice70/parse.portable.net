@@ -1,103 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Flurl.Http.Testing;
 using Newtonsoft.Json;
-using NUnit.Framework;
 using parse.portable.net.Rest.Models;
-using Parse.Api.Models;
 using Parse.Api.Tests;
+using Xunit;
 
 namespace parse.portable.net.tests
 {
-    [TestFixture]
-    public class UserTests
+    public class UserTests : IDisposable
     {
+        private HttpTest _httpTest;
         private const string ValidUserId1 = "";
         private const string FakeUuid = "0000000000000000";
-        [Test]
+
+        public UserTests()
+        {
+            _httpTest = new HttpTest();
+        }
+
+        [Fact]
         public async Task UserSignUp()
         {
+            var parseObject = new ParseUser();
+            parseObject.CreatedAt = DateTime.Now;
+            parseObject.UpdatedAt = DateTime.Now;
+            parseObject.ObjectId = "dafdafd23";
+            var response = JsonConvert.SerializeObject(parseObject);
+
+            _httpTest.RespondWithJson(response);
+
             var fakeUser = GetFakeUser();
-            
+
             var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
 
             var result = await parseClient.SignUp(fakeUser.Username, fakeUser.Password, CancellationToken.None);
-            
+
             Assert.True(result);
         }
-        
-        [Test]
+
+        [Fact]
         public async Task LoginAsync()
         {
             var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
 
             var result = await parseClient.LoginAsync("cprice70", "test4444", CancellationToken.None);
-            
+
             Assert.True(!string.IsNullOrWhiteSpace(result.SessionToken));
-        }
-
-        [Test]
-        public async Task LoginAnonymousAsync()
-        {
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
-
-            var result = await parseClient.LoginAnonymousAsync(CancellationToken.None);
-            
-            Assert.True(!string.IsNullOrWhiteSpace(result.SessionToken));
-        }
-
-        [Test]
-        public async Task CreateObject()
-        {
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
-            var obj = new {uuidForDevice = FakeUuid};
-           
-            var result = await parseClient.CreateObjectAsync<ParseObject>("UUID", obj, CancellationToken.None);
-
-            Assert.True(!string.IsNullOrWhiteSpace(result.ObjectId));
-        }
-
-        [Test]
-        public async Task QueryObjects()
-        {
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
-            
-            var result = await parseClient.QueryObjectAsync<ParseObject>("UUID", null, CancellationToken.None);
-
-            Assert.True(result.Count > 0);
-        }
-
-        [Test]
-        public async Task QueryObjectsWithCondition()
-        {
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
-            var query = JsonConvert.SerializeObject(new Dictionary<string,string>(){{"uuidForDevice",FakeUuid}});
-           
-            var result = await parseClient.QueryObjectAsync<ParseObject>("UUID", query, CancellationToken.None);
-
-            Assert.True(result.Count > 0);
-        }
-
-        #region helpers
-
-        private static ParseUnitTestObj GetFakeObj()
-        {
-            return new ParseUnitTestObj
-            {
-                SomeByte = 1,
-                SomeShort = 2,
-                SomeInt = 3,
-                SomeLong = 4,
-                SomeNullableBool = null,
-                SomeGeoPoint = new ParseGeoPoint(40, 40),
-                SomeBytes = new byte[] {1, 2, 3},
-                SomeDate = DateTime.UtcNow.AddDays(-10),
-                SomeNullableDate = DateTime.UtcNow.AddDays(-30),
-                SomePointer = new MyUser {ObjectId = ValidUserId1},
-                SomeObject = new {Rando = true},
-                SomeArray = new[] {1, 2, 3},
-            };
         }
 
         private static MyUser GetFakeUser()
@@ -111,38 +61,9 @@ namespace parse.portable.net.tests
             };
         }
 
-        private static void AssertParseObjectEqual<T>(T obj1, T obj2) where T : ParseObject
+        public void Dispose()
         {
-            if (obj1 == null && obj2 == null)
-            {
-                return;
-            }
-
-            Assert.IsNotNull(obj1);
-            Assert.IsNotNull(obj2);
-
-            foreach (var prop in typeof(T).GetProperties())
-            {
-                if (prop.PropertyType.IsClass)
-                {
-                    continue;
-                }
-
-                var prop1 = prop.GetValue(obj1, null);
-                var prop2 = prop.GetValue(obj2, null);
-
-                if (prop.PropertyType == typeof(DateTime))
-                {
-                    var diff = ((DateTime) prop1).Subtract((DateTime) prop2);
-                    Assert.IsTrue(Math.Abs(diff.TotalMilliseconds) < 1);
-                }
-                else
-                {
-                    Assert.AreEqual(prop1, prop2);
-                }
-            }
+            _httpTest.Dispose();
         }
-
-        #endregion
     }
 }
