@@ -15,7 +15,7 @@ namespace parse.portable.net.Rest.Models
         public DateTime UpdatedAt { get; set;  }
 
         [JsonProperty("objectId")]
-        public string ObjectId { get; set; }
+        public virtual string ObjectId { get; set; }
 
         public bool ShouldSerializeCreatedAt()
         {
