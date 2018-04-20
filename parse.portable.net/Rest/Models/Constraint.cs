@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Parse.Api.Models
+namespace parse.portable.net.Rest.Models
 {
     // TODO GeoQueries
     /// <summary>

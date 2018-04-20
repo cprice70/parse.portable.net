@@ -264,13 +264,13 @@ namespace parse.portable.net
             }
         }
 
-        public async Task<T> CallFunctionAsync<T>(String name,
+        public async Task<T> CallFunctionAsync<T>(string name,
             IDictionary<string, object> parameters, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
-            var json_params = JsonConvert.SerializeObject(parameters);
+            var jsonParams = JsonConvert.SerializeObject(parameters);
             try
             {
                 var functionUrl = BaseUrl + string.Format(ParseUrls.Jobs, name);
@@ -278,7 +278,7 @@ namespace parse.portable.net
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
-                    .PostJsonAsync(json_params, token)
+                    .PostJsonAsync(jsonParams, token)
                     .ReceiveJson<T>();
 
                 if (getResp == null) return default(T);

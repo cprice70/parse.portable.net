@@ -1,6 +1,4 @@
-﻿using parse.portable.net.Rest;
-
-namespace ParseCommon.Rest
+﻿namespace parse.portable.net.Rest
 {
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.10.22.0 (Newtonsoft.Json v9.0.0.0)")]
     public sealed class ErrorResponse : System.ComponentModel.INotifyPropertyChanged

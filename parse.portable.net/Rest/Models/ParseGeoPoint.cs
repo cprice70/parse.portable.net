@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using parse.portable.net.Rest.Models;
 
-namespace Parse.Api.Models
+namespace parse.portable.net.Rest.Models
 {
     /// <summary>
     /// Parse data type for a geographic point (lat + lon)
