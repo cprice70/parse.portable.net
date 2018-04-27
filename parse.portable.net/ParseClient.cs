@@ -93,10 +93,14 @@ namespace parse.portable.net
                     })
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
-                    .WithHeader("Content-Type", "application/json")
                     .GetJsonAsync<ParseUser>(cancellationToken);
                 
                 return getResp;
+            }
+            catch (FlurlHttpException ex)
+            {
+                var error = await ex.GetResponseJsonAsync();
+                return null;
             }
             catch (Exception e)
             {
@@ -145,7 +149,7 @@ namespace parse.portable.net
                     .WithHeader("X-Parse-Session-Token", authToken)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
-                    .WithHeader("Content-Type", "application/json")
+                    //.WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveJson<ParseResponse>();
 
@@ -196,7 +200,7 @@ namespace parse.portable.net
             var resp = await url
                 .WithHeader(ParseHeaders.AppId, AddId)
                 .WithHeader("X-Parse-Revocable-Session", 1)
-                .WithHeader("Content-Type", "application/json")
+                //.WithHeader("Content-Type", "application/json")
                 .WithHeader(ParseHeaders.SessionToken, sessionToken)
                 .DeleteAsync(token);
 
@@ -251,7 +255,7 @@ namespace parse.portable.net
                     })
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
-                    .WithHeader("Content-Type", "application/json")
+                    //.WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveString();
                 var mDeserializeObject =  JsonConvert.DeserializeObject<Results<T>>(getResp);

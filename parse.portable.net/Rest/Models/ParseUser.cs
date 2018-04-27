@@ -32,6 +32,8 @@ namespace parse.portable.net.Rest.Models
         public AuthData AuthData { get; set; }
         public override string ClassName => string.Empty;
 
+        [JsonProperty("ACL")]
+        public ParseACL Acl { get; set; }
     }
 
     public class AuthData
