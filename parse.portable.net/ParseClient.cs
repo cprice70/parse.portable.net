@@ -241,20 +241,37 @@ namespace parse.portable.net
             }  
         }
 
-        public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, CancellationToken token) where T : ParseObject, new()        
+        public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, CancellationToken token) where T : ParseObject, new()
+        {
+            object query_params = new { where = query };
+            return await QueryObjectAsync<T>(className, query_params, token);
+        }
+
+        public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, int querylimit, string orderBy, CancellationToken token) where T : ParseObject, new()
+        {
+            object query_params = new { where = query, limit = querylimit, order = orderBy };
+            return await QueryObjectAsync<T>(className, query_params, token);
+        }
+
+        public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, int querylimit, CancellationToken token) where T : ParseObject, new()
+        {
+            object query_params = new { where = query, limit = querylimit};
+            return await QueryObjectAsync<T>(className, query_params, token);
+        }
+        public async Task<IList<T>> QueryObjectAsync<T>(string className, object query_params, CancellationToken token) where T : ParseObject, new()        
         {
             if (string.IsNullOrWhiteSpace(className)) throw new ArgumentNullException(nameof(className));
 
             try
             {
+                if (query_params == null) return null;
+
                 var createUrl = BaseUrl + string.Format(ParseUrls.Class, className);
                 var getResp = await createUrl
-                    .SetQueryParams(new
-                    {
-                        where = query
-                    })
+                    .SetQueryParams(query_params)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
+
                     //.WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveString();
