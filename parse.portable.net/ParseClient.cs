@@ -149,7 +149,6 @@ namespace parse.portable.net
                     .WithHeader("X-Parse-Session-Token", authToken)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
-                    //.WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveJson<ParseResponse>();
 
@@ -243,19 +242,19 @@ namespace parse.portable.net
 
         public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, CancellationToken token) where T : ParseObject, new()
         {
-            object query_params = new { where = query };
+            object query_params = new { where=query };
             return await QueryObjectAsync<T>(className, query_params, token);
         }
 
         public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, int querylimit, string orderBy, CancellationToken token) where T : ParseObject, new()
         {
-            object query_params = new { where = query, limit = querylimit, order = orderBy };
+			object query_params = new { where=query };// limit = querylimit };//, order = orderBy };
             return await QueryObjectAsync<T>(className, query_params, token);
         }
 
         public async Task<IList<T>> QueryObjectAsync<T>(string className, string query, int querylimit, CancellationToken token) where T : ParseObject, new()
         {
-            object query_params = new { where = query, limit = querylimit};
+            object query_params = new { where=query, limit=querylimit};
             return await QueryObjectAsync<T>(className, query_params, token);
         }
         public async Task<IList<T>> QueryObjectAsync<T>(string className, object query_params, CancellationToken token) where T : ParseObject, new()        
@@ -271,11 +270,9 @@ namespace parse.portable.net
                     .SetQueryParams(query_params)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
-
-                    //.WithHeader("Content-Type", "application/json")
                     .GetAsync(token)
                     .ReceiveString();
-                var mDeserializeObject =  JsonConvert.DeserializeObject<Results<T>>(getResp);
+                var mDeserializeObject = JsonConvert.DeserializeObject<Results<T>>(getResp);
                 return mDeserializeObject.results;
             }
             catch (Exception e)
