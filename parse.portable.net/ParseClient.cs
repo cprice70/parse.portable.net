@@ -71,6 +71,11 @@ namespace parse.portable.net
 
                 return getResp.IsSuccessStatusCode;
             }
+            catch (FlurlHttpTimeoutException ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e);
@@ -223,6 +228,7 @@ namespace parse.portable.net
             {
                 var createUrl = BaseUrl + string.Format(ParseUrls.Class, className);
                 var getResp = await createUrl
+                    .WithTimeout(10)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
