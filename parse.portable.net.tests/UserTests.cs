@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
@@ -14,7 +15,8 @@ namespace parse.portable.net.tests
         private HttpTest _httpTest;
         private const string ValidUserId1 = "";
         private const string FakeUuid = "0000000000000000";
-
+        private const string ClientID = "98743578e202eb43740849091ff8d0ea";
+        private const string ParseEndPoint = "https://auto-2214.nodechef.com/parse";
         public UserTests()
         {
             _httpTest = new HttpTest();
@@ -23,17 +25,19 @@ namespace parse.portable.net.tests
         [Fact]
         public async Task UserSignUp()
         {
-            var parseObject = new ParseUser();
-            parseObject.CreatedAt = DateTime.Now;
-            parseObject.UpdatedAt = DateTime.Now;
-            parseObject.ObjectId = "dafdafd23";
+            var parseObject = new ParseUser
+            {
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ObjectId = "dafdafd23"
+            };
             var response = JsonConvert.SerializeObject(parseObject);
 
             _httpTest.RespondWithJson(response);
 
             var fakeUser = GetFakeUser();
 
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+            var parseClient = new ParseClient(ClientID, ParseEndPoint);
 
             var result = await parseClient.SignUp(fakeUser.Username, fakeUser.Password, CancellationToken.None);
 
@@ -41,13 +45,33 @@ namespace parse.portable.net.tests
         }
 
         [Fact]
+        public async Task TestCloudFunction()
+        {
+            string SMSExceptionString = $"SMS Cloud function test";
+            string[] keys = { "uuid", "exception", "type" };
+
+            object[] objects = { "d525bd143fe840f5ab2d6f60cd9b6a29", SMSExceptionString, 7 };
+
+            var smsDictionary = new Dictionary<string, object>();
+            for (int index = 0; index < keys.Length; index++)
+            {
+                smsDictionary.Add(keys[index], objects[index]);
+            }
+            var parseClient = new ParseClient(ClientID, ParseEndPoint);
+
+            await LoginAsync();
+           
+            var functionResult = await parseClient.CallFunctionAsync<IDictionary<string, object>>("sms", smsDictionary, CancellationToken.None);
+        }
+
+        [Fact]
         public async Task LoginAsync()
         {
-            var parseClient = new ParseClient("98743578e202eb43740849091ff8d0ea", "https://auto-2214.nodechef.com/parse/");
+            var parseClient = new ParseClient(ClientID, ParseEndPoint);
 
             var result = await parseClient.LoginAsync("cprice70", "test4444", CancellationToken.None);
 
-            Assert.True(!string.IsNullOrWhiteSpace(result.SessionToken));
+            Assert.True(!string.IsNullOrWhiteSpace(result?.SessionToken));
         }
 
         private static MyUser GetFakeUser()

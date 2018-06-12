@@ -297,7 +297,7 @@ namespace parse.portable.net
             var jsonParams = JsonConvert.SerializeObject(parameters);
             try
             {
-                var functionUrl = BaseUrl + string.Format(ParseUrls.Jobs, name);
+                var functionUrl = BaseUrl + string.Format(ParseUrls.Function, name);
                 var getResp = await functionUrl
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
@@ -323,6 +323,8 @@ namespace parse.portable.net
   //https://YOUR.PARSE-SERVER.HERE/parse/jobs/userMigration
 
         }
+
+
 
         private class ParseResponse
         {
