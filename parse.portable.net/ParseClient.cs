@@ -314,14 +314,6 @@ namespace parse.portable.net
                 Console.WriteLine(e);
                 return default(T);
             }
-
-  //          curl - X POST \
-  //-H "X-Parse-Application-Id: 98743578e202eb43740849091ff8d0ea" \
-  //-H "X-Parse-Master-Key: ${MASTER_KEY}" \
-  //-H "Content-Type: application/json" \
-  //-d '{"plan":"paid"}' \
-  //https://YOUR.PARSE-SERVER.HERE/parse/jobs/userMigration
-
         }
 
 
