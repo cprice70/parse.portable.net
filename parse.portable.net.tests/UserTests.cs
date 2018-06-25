@@ -50,7 +50,7 @@ namespace parse.portable.net.tests
             string SMSExceptionString = $"SMS Cloud function test";
             string[] keys = { "uuid", "exception", "type" };
 
-            object[] objects = { "d525bd143fe840f5ab2d6f60cd9b6a29", SMSExceptionString, 7 };
+            object[] objects = { "ee9798fdb87da590", SMSExceptionString, 7 };
 
             var smsDictionary = new Dictionary<string, object>();
             for (int index = 0; index < keys.Length; index++)

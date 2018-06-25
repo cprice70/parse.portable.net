@@ -294,7 +294,8 @@ namespace parse.portable.net
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
-            var jsonParams = JsonConvert.SerializeObject(parameters);
+            var config = new JsonSerializerSettings();
+            //var jsonParams = JsonConvert.SerializeObject(parameters);
             try
             {
                 var functionUrl = BaseUrl + string.Format(ParseUrls.Function, name);
@@ -302,12 +303,17 @@ namespace parse.portable.net
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
-                    .PostJsonAsync(jsonParams, token)
+                    .PostJsonAsync(parameters, token)
                     .ReceiveJson<T>();
 
                 if (getResp == null) return default(T);
                
                 return getResp;
+            }
+            catch (FlurlHttpException ex)
+            {
+                Console.WriteLine(ex);
+                return default(T);
             }
             catch (Exception e)
             {
