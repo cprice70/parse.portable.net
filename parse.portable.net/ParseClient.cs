@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -85,12 +84,13 @@ namespace parse.portable.net
         }
 
         public async Task<ParseUser> LoginAsync(string pUsername, string pPassword,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken, int timeoutSec = 30)
         {
             try
             {
                 var loginUrl = BaseUrl + ParseUrls.Login;
                 var getResp = await loginUrl
+                    .WithTimeout(timeoutSec)
                     .SetQueryParams(new
                     {
                         username = pUsername,
@@ -115,7 +115,7 @@ namespace parse.portable.net
         }
 
         public async Task<ParseUser> LoginAnonymousAsync(
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken, int timeoutSec = 30)
         {
             try
             {
@@ -130,6 +130,7 @@ namespace parse.portable.net
                 var authJson = JsonConvert.SerializeObject(parseAuth);
                 var loginUrl = BaseUrl + ParseUrls.User;
                 var getResp = await loginUrl
+                     .WithTimeout(timeoutSec)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
                     .WithHeader("Content-Type", "application/json")
@@ -145,12 +146,13 @@ namespace parse.portable.net
             }
         }
 
-        public async Task<bool> ValidateTokenAsync(string authToken, CancellationToken token)
+        public async Task<bool> ValidateTokenAsync(string authToken, CancellationToken token, int timeoutSec = 30)
         {
             try
             {
                 var validateUrl = BaseUrl + ParseUrls.Validate;
                 var getResp = await validateUrl
+                     .WithTimeout(timeoutSec)
                     .WithHeader("X-Parse-Session-Token", authToken)
                     .WithHeader(ParseHeaders.AppId, AddId)
                     .WithHeader("X-Parse-Revocable-Session", 1)
@@ -321,8 +323,6 @@ namespace parse.portable.net
                 return default(T);
             }
         }
-
-
 
         private class ParseResponse
         {
